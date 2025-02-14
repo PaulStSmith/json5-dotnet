@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Json5.Tests.Stringifying
 {
@@ -114,10 +115,77 @@ namespace Json5.Tests.Stringifying
         [TestMethod]
         public void CircularObjectsTest()
         {
-            var o = new Json5Object();
-            o["a"] = o;
-            //Json5.Stringify(o);
-            Assert.Fail("Not Implemented", "Expected the test to fail as circular object stringification is not implemented.");
+            // Create an object that contains itself
+            var obj = new Json5Object();
+            obj["self"] = obj;
+
+            // This should throw Json5CircularReferenceException
+            Assert.ThrowsExactly<Json5CircularReferenceException>(() => Json5.Stringify(obj));
+        }
+
+        /// <summary>
+        /// Tests stringification of deep circular objects.
+        /// </summary>
+        [TestMethod]
+        public void DeepCircularObjectsTest()
+        {
+            // Create a more complex circular structure
+            var obj1 = new Json5Object();
+            var obj2 = new Json5Object();
+            var obj3 = new Json5Object();
+
+            obj1["next"] = obj2;
+            obj2["next"] = obj3;
+            obj3["next"] = obj1; // Creates a cycle
+
+            // This should throw Json5CircularReferenceException
+            Assert.ThrowsExactly<Json5CircularReferenceException>(() => Json5.Stringify(obj1));
+        }
+
+        /// <summary>
+        /// Tests stringification of non-circular complex structures.
+        /// </summary>
+        [TestMethod]
+        public void NonCircularComplexStructureTest()
+        {
+            // Create a complex but non-circular structure
+            var obj1 = new Json5Object();
+            var obj2 = new Json5Object();
+            var array1 = new Json5Array();
+            var array2 = new Json5Array();
+
+            obj1["array"] = array1;
+            array1.Add(obj2);
+            obj2["array"] = array2;
+            array2.Add(42); // No cycle created
+
+            // This should succeed
+            var result = Json5.Stringify(obj1);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Contains("42")); // Verify the deep structure was stringified
+        }
+
+        /// <summary>
+        /// Tests stringification of objects with multiple references to the same object, but no cycles.
+        /// </summary>
+        [TestMethod]
+        public void MultipleReferencesNonCircularTest()
+        {
+            // Create a structure with multiple references to the same object, but no cycles
+            var sharedObj = new Json5Object { ["value"] = 42 };
+            var container = new Json5Object
+            {
+                ["ref1"] = sharedObj,
+                ["ref2"] = sharedObj
+            };
+
+            // This should succeed - multiple references are allowed, just not circular ones
+            var result = Json5.Stringify(container);
+            Assert.IsNotNull(result);
+
+            // The value 42 should appear twice in the output
+            var count = result.Split(["42"], StringSplitOptions.None).Length - 1;
+            Assert.AreEqual(2, count, "The shared value should appear twice in the stringified output");
         }
     }
 }

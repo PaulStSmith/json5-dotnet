@@ -69,10 +69,7 @@ namespace Json5
         /// <param name="replacer">A function to transform the values during stringification.</param>  
         /// <param name="space">The number of spaces to use for indentation.</param>  
         /// <returns>A JSON5 string.</returns>  
-        public static string Stringify(Json5Value value, Func<Json5Container, string, Json5Value, Json5Value> replacer, int space)
-        {
-            return Stringify(value, replacer, new string(' ', Math.Min(space, 10)));
-        }
+        public static string Stringify(Json5Value value, Func<Json5Container, string, Json5Value, Json5Value> replacer, int space) => Stringify(value, replacer, GetIndent(space));
 
         /// <summary>  
         /// Converts a JSON5 value to a JSON5 string with a reviver function.  
@@ -97,10 +94,7 @@ namespace Json5
         /// <param name="replacer">A function to transform the values during stringification.</param>  
         /// <param name="space">The number of spaces to use for indentation.</param>  
         /// <returns>A JSON5 string.</returns>  
-        public static string Stringify(Json5Value value, Func<string, Json5Value, Json5Value> replacer, int space)
-        {
-            return Stringify(value, replacer, new string(' ', Math.Min(space, 10)));
-        }
+        public static string Stringify(Json5Value value, Func<string, Json5Value, Json5Value> replacer, int space) => Stringify(value, replacer, new string(' ', Math.Min(space, 10)));
 
         /// <summary>  
         /// Converts a JSON5 value to a JSON5 string with a list of keys to include.  
@@ -125,10 +119,7 @@ namespace Json5
         /// <param name="keys">A list of keys to include in the output.</param>  
         /// <param name="space">The number of spaces to use for indentation.</param>  
         /// <returns>A JSON5 string.</returns>  
-        public static string Stringify(Json5Value value, IEnumerable<string> keys, int space)
-        {
-            return Stringify(value, keys, new string(' ', Math.Max(space, 10)));
-        }
+        public static string Stringify(Json5Value value, IEnumerable<string> keys, int space) => Stringify(value, keys, GetIndent(space));
 
         /// <summary>  
         /// Converts a JSON5 value to a JSON5 string.  
@@ -136,10 +127,7 @@ namespace Json5
         /// <param name="value">The JSON5 value to convert.</param>  
         /// <param name="space">An optional string to use for indentation.</param>  
         /// <returns>A JSON5 string.</returns>  
-        public static string Stringify(Json5Value value, string space = null)
-        {
-            return Stringify(value, (Func<Json5Container, string, Json5Value, Json5Value>)null, space);
-        }
+        public static string Stringify(Json5Value value, string space = null) => Stringify(value, (Func<Json5Container, string, Json5Value, Json5Value>)null, space);
 
         /// <summary>  
         /// Converts a JSON5 value to a JSON5 string with indentation.  
@@ -147,10 +135,7 @@ namespace Json5
         /// <param name="value">The JSON5 value to convert.</param>  
         /// <param name="space">The number of spaces to use for indentation.</param>  
         /// <returns>A JSON5 string.</returns>  
-        public static string Stringify(Json5Value value, int space)
-        {
-            return Stringify(value, (Func<Json5Container, string, Json5Value, Json5Value>)null, space);
-        }
+        public static string Stringify(Json5Value value, int space) => Stringify(value, GetIndent(space));
 
         /// <summary>  
         /// Transforms a JSON5 value using a transformer function.  
@@ -166,6 +151,7 @@ namespace Json5
             };
             return WalkWithRoot(holder, transformer); // This version allows root transformation
         }
+        private static string GetIndent(int space) => new(' ', space > 10 ? 10 : space);
 
         /// <summary>  
         /// Transforms a JSON5 value using a transformer function.  

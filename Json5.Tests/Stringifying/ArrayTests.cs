@@ -54,10 +54,31 @@ namespace Json5.Tests.Stringifying
         [TestMethod]
         public void CircularArraysTest()
         {
-            var a = new Json5Array();
-            a["a"] = a;
-            //Json5.Stringify(a);
-            Assert.Fail("Not Implemented");
+            // Create an array that contains itself
+            var array = new Json5Array();
+            array.Add(array);
+
+            // This should throw Json5CircularReferenceException
+            Assert.ThrowsExactly<Json5CircularReferenceException>(() => Json5.Stringify(array));
+        }
+
+        /// <summary>
+        /// Tests stringification of deep circular arrays.
+        /// </summary>
+        [TestMethod]
+        public void DeepCircularArraysTest()
+        {
+            // Create a more complex circular structure
+            var array1 = new Json5Array();
+            var array2 = new Json5Array();
+            var array3 = new Json5Array();
+
+            array1.Add(array2);
+            array2.Add(array3);
+            array3.Add(array1); // Creates a cycle
+
+            // This should throw Json5CircularReferenceException
+            Assert.ThrowsExactly<Json5CircularReferenceException>(() => Json5.Stringify(array1));
         }
     }
 }

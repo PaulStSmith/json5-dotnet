@@ -135,5 +135,28 @@ namespace Json5
             foreach (var key in this.Keys)
                 yield return new KeyValuePair<string, Json5Value>(key, this[key]);
         }
+
+        /// <summary>
+        /// Converts the container to a JSON5 string representation.
+        /// </summary>
+        /// <param name="space">The string to use for indentation.</param>
+        /// <param name="indent">The current indentation level.</param>
+        /// <param name="useOneSpaceIndent">Whether to use one space for indentation.</param>
+        /// <param name="tracker">The reference tracker to detect circular references.</param>
+        /// <returns>A JSON5 string representation of the container.</returns>
+        internal abstract string ToJson5String(string space, string indent, bool useOneSpaceIndent, ReferenceTracker tracker);
+
+        /// <summary>
+        /// Converts the container to a JSON5 string representation.
+        /// </summary>
+        /// <param name="space">The string to use for indentation.</param>
+        /// <param name="indent">The current indentation level.</param>
+        /// <param name="useOneSpaceIndent">Whether to use one space for indentation.</param>
+        /// <returns>A JSON5 string representation of the container.</returns>
+        internal override string ToJson5String(string space, string indent = "", bool useOneSpaceIndent = false)
+        {
+            var tracker = new ReferenceTracker();
+            return ToJson5String(space, indent, useOneSpaceIndent, tracker);
+        }
     }
 }

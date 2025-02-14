@@ -9,18 +9,11 @@ namespace Json5
     /// <summary>
     /// Represents a JSON5 object.
     /// </summary>
-    public class Json5Object : Json5Container, IEnumerable<KeyValuePair<string, Json5Value>>
+    public partial class Json5Object : Json5Container, IEnumerable<KeyValuePair<string, Json5Value>>
     {
         private readonly Dictionary<string, Json5Value> dictionary = [];
 
-        // https://www.ecma-international.org/ecma-262/5.1/
-        // Match IdentifierName (except escapes)
-        private static readonly Regex identifierNameRegex = new(@"
-            ^
-                [\$_\p{L}\p{Nl}]
-                [\$_\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\u200c\u200d]*
-            $
-        ", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+        private static readonly Regex identifierNameRegex = IdentifierNameRegex();
 
         /// <summary>
         /// Adds an element with the provided key and value to the object.
@@ -130,46 +123,65 @@ namespace Json5
         /// <param name="indent">The current indentation level.</param>
         /// <param name="useOneSpaceIndent">Whether to use one space for indentation.</param>
         /// <returns>A JSON5 string representation of the object.</returns>
-        internal override string ToJson5String(string space, string indent, bool useOneSpaceIndent = false)
+        internal override string ToJson5String(string space, string indent, bool useOneSpaceIndent, ReferenceTracker tracker)
         {
-            var forcedCommaAndNewLineRequired = !string.IsNullOrEmpty(space);
-            var newLine = string.IsNullOrEmpty(space) ? "" : "\n";
-            var currentIndent = useOneSpaceIndent ? " " : indent;
-
-            var sb = new StringBuilder();
-            sb.Append(currentIndent);
-            sb.Append('{');
-            sb.Append(newLine);
-
-            var isFirstValue = true;
-
-            foreach (var property in this)
+            tracker.Push(this);
+            try
             {
-                if (isFirstValue)
+                var forcedCommaAndNewLineRequired = !string.IsNullOrEmpty(space);
+                var newLine = string.IsNullOrEmpty(space) ? "" : "\n";
+                var currentIndent = useOneSpaceIndent ? " " : indent;
+
+                var sb = new StringBuilder();
+                sb.Append(currentIndent);
+                sb.Append('{');
+                sb.Append(newLine);
+
+                var isFirstValue = true;
+
+                foreach (var property in this)
                 {
-                    isFirstValue = false;
+                    if (isFirstValue)
+                    {
+                        isFirstValue = false;
+                    }
+                    else
+                    {
+                        sb.Append(',');
+                        sb.Append(newLine);
+                    }
+
+                    sb.Append(indent);
+                    sb.Append(space);
+                    sb.Append(KeyToString(property.Key));
+                    sb.Append(':');
+
+                    var effectiveValue = property.Value ?? Null;
+                    if (effectiveValue is Json5Container container)
+                    {
+                        sb.Append(container.ToJson5String(space, indent + space, forcedCommaAndNewLineRequired, tracker));
+                    }
+                    else
+                    {
+                        sb.Append(effectiveValue.ToJson5String(space, indent + space, forcedCommaAndNewLineRequired));
+                    }
                 }
-                else
+
+                if (forcedCommaAndNewLineRequired)
                 {
                     sb.Append(',');
                     sb.Append(newLine);
                 }
 
                 sb.Append(indent);
-                sb.Append(space);
-                sb.Append(KeyToString(property.Key));
-                sb.Append(':');
-                sb.Append((property.Value ?? Null).ToJson5String(space, indent + space, forcedCommaAndNewLineRequired));
-            }
+                sb.Append('}');
 
-            if (forcedCommaAndNewLineRequired)
+                return sb.ToString();
+            }
+            finally
             {
-                sb.Append(',').Append(newLine);
+                tracker.Pop(this);
             }
-
-            sb.Append(indent).Append('}');
-
-            return sb.ToString();
         }
 
         /// <summary>
@@ -177,12 +189,17 @@ namespace Json5
         /// </summary>
         /// <param name="key">The key to convert.</param>
         /// <returns>A JSON5 string representation of the key.</returns>
-        private string KeyToString(string key)
+        private static string KeyToString(string key)
         {
             if (identifierNameRegex.IsMatch(key))
                 return key;
 
             return Json5.QuoteString(key);
         }
+
+        // https://www.ecma-international.org/ecma-262/5.1/
+        // Match IdentifierName (except escapes)
+        [GeneratedRegex(@"^[\$_\p{L}\p{Nl}][\$_\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\u200c\u200d]*$")]
+        private static partial Regex IdentifierNameRegex();
     }
 }

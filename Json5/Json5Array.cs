@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Json5
 {
@@ -205,40 +206,59 @@ namespace Json5
         /// <param name="indent">The current indentation level.</param>
         /// <param name="useOneSpaceIndent">Whether to use one space for indentation.</param>
         /// <returns>A JSON5 string representation of the array.</returns>
-        internal override string ToJson5String(string space, string indent, bool useOneSpaceIndent = false)
+        internal override string ToJson5String(string space, string indent, bool useOneSpaceIndent, ReferenceTracker tracker)
         {
-            // "If white space is used, trailing commas will be used in objects and arrays." from specification
-            var forcedCommaAndNewLineRequired = !string.IsNullOrEmpty(space);
-
-            var newLine = string.IsNullOrEmpty(space) ? "" : "\n";
-
-            // TODO: Use string builder instead of string
-            var s = indent + "[" + newLine;
-
-            var isFirstValue = true;
-
-            foreach (var value in this)
+            tracker.Push(this);
+            try
             {
-                if (isFirstValue)
+                var forcedCommaAndNewLineRequired = !string.IsNullOrEmpty(space);
+                var newLine = string.IsNullOrEmpty(space) ? "" : "\n";
+
+                var sb = new StringBuilder();
+                sb.Append(indent);
+                sb.Append('[');
+                sb.Append(newLine);
+
+                var isFirstValue = true;
+
+                foreach (var value in this)
                 {
-                    isFirstValue = false;
-                }
-                else
-                {
-                    s += "," + newLine;
+                    if (isFirstValue)
+                    {
+                        isFirstValue = false;
+                    }
+                    else
+                    {
+                        sb.Append(',');
+                        sb.Append(newLine);
+                    }
+
+                    var effectiveValue = value ?? Null;
+                    if (effectiveValue is Json5Container container)
+                    {
+                        sb.Append(container.ToJson5String(space, indent + space, false, tracker));
+                    }
+                    else
+                    {
+                        sb.Append(effectiveValue.ToJson5String(space, indent + space));
+                    }
                 }
 
-                s += (value ?? Null).ToJson5String(space, indent + space);
+                if (forcedCommaAndNewLineRequired)
+                {
+                    sb.Append(',');
+                    sb.Append(newLine);
+                }
+
+                sb.Append(indent);
+                sb.Append(']');
+
+                return sb.ToString();
             }
-
-            if (forcedCommaAndNewLineRequired)
+            finally
             {
-                s += "," + newLine;
+                tracker.Pop(this);
             }
-
-            s += indent + "]";
-
-            return s;
         }
     }
 }
