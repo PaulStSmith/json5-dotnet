@@ -15,7 +15,7 @@ namespace Json5.Tests.Stringifying
         public void TrueTest()
         {
             var s = Json5.Stringify(true);
-            Assert.AreEqual("true", s);
+            Assert.AreEqual("true", s, "Expected the stringified value to be 'true' for the boolean value true.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Stringifying
         public void FalseTest()
         {
             var s = Json5.Stringify(false);
-            Assert.AreEqual("false", s);
+            Assert.AreEqual("false", s, "Expected the stringified value to be 'false' for the boolean value false.");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Json5.Tests.Stringifying
         public void NullSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 });
-            Assert.AreEqual("[1]", s);
+            Assert.AreEqual("[1]", s, "Expected the stringified value to be '[1]' with null space.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Stringifying
         public void ZeroSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, 0);
-            Assert.AreEqual("[1]", s);
+            Assert.AreEqual("[1]", s, "Expected the stringified value to be '[1]' with zero space.");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Json5.Tests.Stringifying
         public void EmptyStringSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, "");
-            Assert.AreEqual("[1]", s);
+            Assert.AreEqual("[1]", s, "Expected the stringified value to be '[1]' with empty string space.");
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Json5.Tests.Stringifying
         public void NumberSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, 2);
-            Assert.AreEqual("[\n  1,\n]", s);
+            Assert.AreEqual("[\n  1,\n]", s, "Expected the stringified value to be '[\\n  1,\\n]' with numeric space of 2.");
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Json5.Tests.Stringifying
         public void MaxNumberSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, 11);
-            Assert.AreEqual("[\n          1,\n]", s);
+            Assert.AreEqual("[\n          1,\n]", s, "Expected the stringified value to be '[\\n          1,\\n]' with maximum numeric space of 11.");
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Json5.Tests.Stringifying
         public void StringSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, "\t");
-            Assert.AreEqual("[\n\t1,\n]", s);
+            Assert.AreEqual("[\n\t1,\n]", s, "Expected the stringified value to be '[\\n\\t1,\\n]' with string space of '\\t'.");
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Json5.Tests.Stringifying
         public void MaxStringSpaceTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, "           ");
-            Assert.AreEqual("[\n          1,\n]", s);
+            Assert.AreEqual("[\n          1,\n]", s, "Expected the stringified value to be '[\\n          1,\\n]' with maximum string space.");
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Json5.Tests.Stringifying
         public void ArraysTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 }, 2);
-            Assert.AreEqual("[\n  1,\n]", s);
+            Assert.AreEqual("[\n  1,\n]", s, "Expected the stringified value to be '[\\n  1,\\n]' for arrays with space formatting.");
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Json5.Tests.Stringifying
         public void NestedArraysTest()
         {
             var s = Json5.Stringify(new Json5Array { 1, new Json5Array { 2 }, 3 }, 2);
-            Assert.AreEqual("[\n  1,\n  [\n    2,\n  ],\n  3,\n]", s);
+            Assert.AreEqual("[\n  1,\n  [\n    2,\n  ],\n  3,\n]", s, "Expected the stringified value to be '[\\n  1,\\n  [\\n    2,\\n  ],\\n  3,\\n]' for nested arrays with space formatting.");
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Json5.Tests.Stringifying
         public void ObjectsTest()
         {
             var s = Json5.Stringify(new Json5Object { { "a", 1 } }, 2);
-            Assert.AreEqual("{\n  a: 1,\n}", s);
+            Assert.AreEqual("{\n  a: 1,\n}", s, "Expected the stringified value to be '{\\n  a: 1,\\n}' for objects with space formatting.");
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Json5.Tests.Stringifying
         public void NestedObjectsTest()
         {
             var s = Json5.Stringify(new Json5Object { { "a", new Json5Object { { "b", 2 } } } }, 2);
-            Assert.AreEqual("{\n  a: {\n    b: 2,\n  },\n}", s);
+            Assert.AreEqual("{\n  a: {\n    b: 2,\n  },\n}", s, "Expected the stringified value to be '{\\n  a: {\\n    b: 2,\\n  },\\n}' for nested objects with space formatting.");
         }
     }
 }

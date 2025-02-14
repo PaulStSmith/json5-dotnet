@@ -15,7 +15,7 @@ namespace Json5.Tests.Stringifying
         public void SingleQuotedStringsTest()
         {
             var s = Json5.Stringify("abc");
-            Assert.AreEqual("'abc'", s);
+            Assert.AreEqual("'abc'", s, "Expected the stringified value to be ''abc'' for single-quoted strings.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Stringifying
         public void DoubleQuotedStringsTest()
         {
             var s = Json5.Stringify("abc'");
-            Assert.AreEqual("\"abc'\"", s);
+            Assert.AreEqual("\"abc'\"", s, "Expected the stringified value to be '\"abc'\"' for double-quoted strings.");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Json5.Tests.Stringifying
         public void EscapedCharactersTest()
         {
             var s = Json5.Stringify("\\\b\f\n\r\t\v\0\x0f");
-            Assert.AreEqual(@"'\\\b\f\n\r\t\v\0\x0f'", s);
+            Assert.AreEqual(@"'\\\b\f\n\r\t\v\0\x0f'", s, "Expected the stringified value to match the escaped characters.");
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Json5.Tests.Stringifying
         public void EscapedSingleQuotesTest()
         {
             var s = Json5.Stringify("'\"");
-            Assert.AreEqual("'\\'\"'", s);
+            Assert.AreEqual("'\\'\"'", s, "Expected the stringified value to be ''\\'\"'' for strings with escaped single quotes.");
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Json5.Tests.Stringifying
         public void EscapedDoubleQuotesTest()
         {
             var s = Json5.Stringify("''\"");
-            Assert.AreEqual("\"''\\\"\"", s);
+            Assert.AreEqual("\"''\\\"\"", s, "Expected the stringified value to be '\"''\\\"\"' for strings with escaped double quotes.");
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Json5.Tests.Stringifying
         public void EscapedSeparatorsTest()
         {
             var s = Json5.Stringify("\u2028\u2029");
-            Assert.AreEqual("'\\u2028\\u2029'", s);
+            Assert.AreEqual("'\\u2028\\u2029'", s, "Expected the stringified value to match the escaped separator characters.");
         }
     }
 }

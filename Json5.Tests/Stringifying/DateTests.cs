@@ -16,7 +16,7 @@ namespace Json5.Tests.Stringifying
         public void DatesTest()
         {
             var s = Json5.Stringify(new DateTime(2016, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            Assert.AreEqual("'2016-01-01T00:00:00.000Z'", s);
+            Assert.AreEqual("'2016-01-01T00:00:00.000Z'", s, "Expected the stringified value to be '2016-01-01T00:00:00.000Z' for the given DateTime value.");
         }
     }
 }

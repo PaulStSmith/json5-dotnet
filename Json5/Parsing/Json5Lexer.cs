@@ -10,7 +10,7 @@ namespace Json5.Parsing
     /// </summary>
     class Json5Lexer
     {
-        private Json5TextReader reader;
+        private readonly Json5TextReader reader;
 
         /// <summary>
         /// Constructs a new <see cref="Json5Lexer"/> using a <see cref="string"/>.
@@ -33,17 +33,17 @@ namespace Json5.Parsing
         /// <returns>The next token in the text.</returns>
         public Json5Token Read()
         {
-            State state = State.Default;
-            string inputBuffer = "";
-            string valueBuffer = "";
+            var state = State.Default;
+            var inputBuffer = "";
+            var valueBuffer = "";
             double sign = 1;
-            bool doubleQuote = false;
+            var doubleQuote = false;
             int? line = null;
             int? column = null;
             char c;
 
         start:
-            int r = this.reader.Peek();
+            var r = this.reader.Peek();
 
             switch (state)
             {
@@ -253,8 +253,8 @@ namespace Json5.Parsing
                         throw UnexpectedCharacter((char)r);
 
                     inputBuffer += (char)this.reader.Read();
-                    string hexBuffer = "";
-                    int count = 4;
+                    var hexBuffer = "";
+                    var count = 4;
                     while (count-- > 0)
                     {
                         if ((r = this.reader.Peek()) == -1)
@@ -267,7 +267,7 @@ namespace Json5.Parsing
                         hexBuffer += c;
                     }
 
-                    char u = (char)int.Parse(hexBuffer, NumberStyles.HexNumber);
+                    var u = (char)int.Parse(hexBuffer, NumberStyles.HexNumber);
                     if (u == '$' || u == '_' || IsLetter(u))
                     {
                         state = State.Identifier;
@@ -338,7 +338,7 @@ namespace Json5.Parsing
                         case 'I':
                             inputBuffer += (char)this.reader.Read();
 
-                            foreach (char i in "nfinity")
+                            foreach (var i in "nfinity")
                             {
                                 if ((r = this.reader.Peek()) == -1)
                                     throw UnexpectedEndOfInput();
@@ -742,21 +742,20 @@ namespace Json5.Parsing
         /// <returns><c>true</c> if <paramref name="c"/> is a digit; otherwise, <c>false</c>.</returns>
         static bool IsDigit(int c)
         {
-            switch (c)
+            return c switch
             {
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                    return true;
-            }
-            return false;
+                '0' or
+                '1' or
+                '2' or
+                '3' or
+                '4' or
+                '5' or
+                '6' or
+                '7' or
+                '8' or
+                '9' => true,
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -766,23 +765,16 @@ namespace Json5.Parsing
         /// <returns><c>true</c> if <paramref name="c"/> is a hexadecimal digit; otherwise, <c>false</c>.</returns>
         static bool IsHexDigit(int c)
         {
-            switch (c)
+            return c switch
             {
-                case 'a':
-                case 'b':
-                case 'c':
-                case 'd':
-                case 'e':
-                case 'f':
-                case 'A':
-                case 'B':
-                case 'C':
-                case 'D':
-                case 'E':
-                case 'F':
-                    return true;
-            }
-            return IsDigit(c);
+                'a' or 'A' or
+                'b' or 'B' or
+                'c' or 'C' or
+                'd' or 'D' or
+                'e' or 'E' or
+                'f' or 'F' => true,
+                _ => IsDigit(c),
+            };
         }
 
         /// <summary>
@@ -802,16 +794,15 @@ namespace Json5.Parsing
         /// <returns><c>true</c> if <paramref name="c"/> is an ECMAScript 5.1 Unicode identifier character; otherwise, <c>false</c>.</returns>
         static bool IsIdentifierChar(char c)
         {
-            switch (char.GetUnicodeCategory(c))
+            return char.GetUnicodeCategory(c) switch
             {
-                case UnicodeCategory.NonSpacingMark:
-                case UnicodeCategory.SpacingCombiningMark:
-                case UnicodeCategory.DecimalDigitNumber:
-                case UnicodeCategory.ConnectorPunctuation:
-                    return true;
-            }
-
-            return IsLetter(c);
+                UnicodeCategory.NonSpacingMark or
+                UnicodeCategory.SpacingCombiningMark or
+                UnicodeCategory.DecimalDigitNumber or
+                UnicodeCategory.ConnectorPunctuation or
+                UnicodeCategory.Format => true,
+                _ => IsLetter(c),
+            };
         }
 
         /// <summary>
@@ -827,8 +818,8 @@ namespace Json5.Parsing
         {
             if (value != null)
             {
-                input = input ?? value.ToString();
-                column = column ?? this.reader.Column - input.Length;
+                input ??= value.ToString();
+                column ??= this.reader.Column - input.Length;
             }
 
             return new Json5Token { Type = type, Value = value, Input = input, Line = line ?? this.reader.Line, Column = column ?? this.reader.Column };

@@ -15,7 +15,7 @@ namespace Json5.Tests.Stringifying
         public void EmptyArraysTest()
         {
             var s = Json5.Stringify(new Json5Array());
-            Assert.AreEqual("[]", s);
+            Assert.AreEqual("[]", s, "Expected the stringified value to be '[]' for an empty array.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Stringifying
         public void ArrayValuesTest()
         {
             var s = Json5.Stringify(new Json5Array { 1 });
-            Assert.AreEqual("[1]", s);
+            Assert.AreEqual("[1]", s, "Expected the stringified value to be '[1]' for an array with a single value.");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Json5.Tests.Stringifying
         public void MultipleArrayValuesTest()
         {
             var s = Json5.Stringify(new Json5Array { 1, 2 });
-            Assert.AreEqual("[1,2]", s);
+            Assert.AreEqual("[1,2]", s, "Expected the stringified value to be '[1,2]' for an array with multiple values.");
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Json5.Tests.Stringifying
         public void NestedArraysTest()
         {
             var s = Json5.Stringify(new Json5Array { 1, new Json5Array { 2, 3 } });
-            Assert.AreEqual("[1,[2,3]]", s);
+            Assert.AreEqual("[1,[2,3]]", s, "Expected the stringified value to be '[1,[2,3]]' for nested arrays.");
         }
 
         /// <summary>

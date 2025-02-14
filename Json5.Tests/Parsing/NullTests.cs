@@ -15,7 +15,7 @@ namespace Json5.Tests.Parsing
         public void NullTest()
         {
             var v = Json5.Parse("null");
-            Assert.AreEqual(Json5Type.Null, v.Type);
+            Assert.AreEqual(Json5Type.Null, v.Type, "Expected the parsed value to be of type Null.");
         }
     }
 }

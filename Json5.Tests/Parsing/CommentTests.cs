@@ -16,7 +16,7 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{//comment\n}");
             var o = (Json5Object)v;
-            Assert.AreEqual(0, o.Count);
+            Assert.AreEqual(0, o.Count, "Expected the object to have no properties after parsing single-line comments.");
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{}//comment");
             var o = (Json5Object)v;
-            Assert.AreEqual(0, o.Count);
+            Assert.AreEqual(0, o.Count, "Expected the object to have no properties after parsing single-line comments at the end of the file.");
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{/*comment\n** */}");
             var o = (Json5Object)v;
-            Assert.AreEqual(0, o.Count);
+            Assert.AreEqual(0, o.Count, "Expected the object to have no properties after parsing multi-line comments.");
         }
     }
 }

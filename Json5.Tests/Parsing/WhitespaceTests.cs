@@ -16,7 +16,7 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{\t\v\f \u00A0\uFEFF\n\r\u2028\u2029\u2003}");
             var o = (Json5Object)v;
-            Assert.AreEqual(0, o.Count);
+            Assert.AreEqual(0, o.Count, "Expected the object to have no properties after parsing various whitespace characters.");
         }
     }
 }

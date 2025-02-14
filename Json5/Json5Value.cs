@@ -10,7 +10,7 @@ namespace Json5
         /// <summary>  
         /// Represents a JSON5 null value.  
         /// </summary>  
-        public static readonly Json5Null Null = new Json5Null();
+        public static readonly Json5Null Null = new();
 
         /// <summary>  
         /// Gets the type of the JSON5 value.  

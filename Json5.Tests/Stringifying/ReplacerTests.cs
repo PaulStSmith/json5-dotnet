@@ -15,7 +15,7 @@ namespace Json5.Tests.Stringifying
         public void KeysTest()
         {
             var s = Json5.Stringify(new Json5Object { { "a", 1 }, { "b", 2 }, { "3", 3 } }, ["a", "3"]);
-            Assert.AreEqual("{a:1,'3':3}", s);
+            Assert.AreEqual("{a:1,'3':3}", s, "Expected the stringified value to include only the specified keys 'a' and '3'.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Stringifying
         public void FunctionTest()
         {
             var s = Json5.Stringify(new Json5Object { { "a", 1 }, { "b", 2 } }, (k, v) => (k == "a") ? 2 : v);
-            Assert.AreEqual("{a:2,b:2}", s);
+            Assert.AreEqual("{a:2,b:2}", s, "Expected the stringified value to have the property 'a' modified to 2 by the replacer function.");
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace Json5.Tests.Stringifying
         [TestMethod]
         public void ExposesParentValueTest()
         {
-            var s = Json5.Stringify(new Json5Object { { "a", 1 }, { "b", 2 } }, (p, k, v) => (k == "b" && (double?)p["b"] != null) ? 2 : v);
-            Assert.AreEqual("{a:{b:2}}", s);
+            var s = Json5.Stringify(Json5.Parse("{a:{b:1}}"), (p, k, v) => (k == "b" && (double?)p["b"] != null) ? 2 : v);
+            Assert.AreEqual("{a:{b:2}}", s, "Expected the stringified value to have the nested property 'b' modified to 2 when the parent value is exposed.");
         }
     }
 }

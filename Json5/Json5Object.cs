@@ -3,13 +3,24 @@ using System.Collections.Generic;
 namespace Json5
 {
     using Parsing;
+    using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Represents a JSON5 object.
     /// </summary>
     public class Json5Object : Json5Container, IEnumerable<KeyValuePair<string, Json5Value>>
     {
-        private Dictionary<string, Json5Value> dictionary = new Dictionary<string, Json5Value>();
+        private readonly Dictionary<string, Json5Value> dictionary = [];
+
+        // https://www.ecma-international.org/ecma-262/5.1/
+        // Match IdentifierName (except escapes)
+        private static readonly Regex identifierNameRegex = new(@"
+            ^
+                [\$_\p{L}\p{Nl}]
+                [\$_\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\u200c\u200d]*
+            $
+        ", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         /// <summary>
         /// Adds an element with the provided key and value to the object.
@@ -121,17 +132,16 @@ namespace Json5
         /// <returns>A JSON5 string representation of the object.</returns>
         internal override string ToJson5String(string space, string indent, bool useOneSpaceIndent = false)
         {
-            // "If white space is used, trailing commas will be used in objects and arrays." from specification
-            bool forcedCommaAndNewLineRequired = !string.IsNullOrEmpty(space);
+            var forcedCommaAndNewLineRequired = !string.IsNullOrEmpty(space);
+            var newLine = string.IsNullOrEmpty(space) ? "" : "\n";
+            var currentIndent = useOneSpaceIndent ? " " : indent;
 
-            string newLine = string.IsNullOrEmpty(space) ? "" : "\n";
+            var sb = new StringBuilder();
+            sb.Append(currentIndent);
+            sb.Append('{');
+            sb.Append(newLine);
 
-            string currentIndent = useOneSpaceIndent ? " " : indent;
-
-            // TODO: Use string builder instead of string
-            string s = currentIndent + "{" + newLine;
-
-            bool isFirstValue = true;
+            var isFirstValue = true;
 
             foreach (var property in this)
             {
@@ -141,22 +151,25 @@ namespace Json5
                 }
                 else
                 {
-                    s += "," + newLine;
+                    sb.Append(',');
+                    sb.Append(newLine);
                 }
 
-                s += indent + space + KeyToString(property.Key) + ":";
-
-                s += (property.Value ?? Null).ToJson5String(space, indent + space, forcedCommaAndNewLineRequired);
+                sb.Append(indent);
+                sb.Append(space);
+                sb.Append(KeyToString(property.Key));
+                sb.Append(':');
+                sb.Append((property.Value ?? Null).ToJson5String(space, indent + space, forcedCommaAndNewLineRequired));
             }
 
             if (forcedCommaAndNewLineRequired)
             {
-                s += "," + newLine;
+                sb.Append(',').Append(newLine);
             }
 
-            s += indent + "}";
+            sb.Append(indent).Append('}');
 
-            return s;
+            return sb.ToString();
         }
 
         /// <summary>
@@ -166,12 +179,7 @@ namespace Json5
         /// <returns>A JSON5 string representation of the key.</returns>
         private string KeyToString(string key)
         {
-            if (key.Length == 0)
-                return "''";
-
-            // This will not always work unless we check for Eof after the Identifier.
-            // We should probably handle this another way.
-            if (new Json5Lexer(key).Read().Type == Json5TokenType.Identifier)
+            if (identifierNameRegex.IsMatch(key))
                 return key;
 
             return Json5.QuoteString(key);

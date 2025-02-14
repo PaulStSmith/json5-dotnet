@@ -16,7 +16,7 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{}");
             var o = (Json5Object)v;
-            Assert.AreEqual(0, o.Count);
+            Assert.AreEqual(0, o.Count, "Expected the object to have no properties after parsing an empty object.");
         }
 
         /// <summary>
@@ -27,8 +27,8 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{\"a\":1}");
             var o = (Json5Object)v;
-            Assert.AreEqual(1, o.Count);
-            Assert.AreEqual(1D, (double)o["a"]);
+            Assert.AreEqual(1, o.Count, "Expected the object to have one property after parsing an object with double-quoted property names.");
+            Assert.AreEqual(1D, (double)o["a"], "Expected the property 'a' to have the value 1.");
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{'a':1}");
             var o = (Json5Object)v;
-            Assert.AreEqual(1, o.Count);
-            Assert.AreEqual(1D, (double)o["a"]);
+            Assert.AreEqual(1, o.Count, "Expected the object to have one property after parsing an object with single-quoted property names.");
+            Assert.AreEqual(1D, (double)o["a"], "Expected the property 'a' to have the value 1.");
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{a:1}");
             var o = (Json5Object)v;
-            Assert.AreEqual(1, o.Count);
-            Assert.AreEqual(1D, (double)o["a"]);
+            Assert.AreEqual(1, o.Count, "Expected the object to have one property after parsing an object with unquoted property names.");
+            Assert.AreEqual(1D, (double)o["a"], "Expected the property 'a' to have the value 1.");
         }
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{$_:1,_$:2,a\u200C:3}");
             var o = (Json5Object)v;
-            Assert.AreEqual(3, o.Count);
-            Assert.AreEqual(1D, (double)o["$_"]);
-            Assert.AreEqual(2D, (double)o["_$"]);
-            Assert.AreEqual(3D, (double)o["a\u200C"]);
+            Assert.AreEqual(3, o.Count, "Expected the object to have three properties after parsing an object with special character property names.");
+            Assert.AreEqual(1D, (double)o["$_"], "Expected the property '$_' to have the value 1.");
+            Assert.AreEqual(2D, (double)o["_$"], "Expected the property '_$' to have the value 2.");
+            Assert.AreEqual(3D, (double)o["a\u200C"], "Expected the property 'a\u200C' to have the value 3.");
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{ùńîċõďë:9}");
             var o = (Json5Object)v;
-            Assert.AreEqual(1, o.Count);
-            Assert.AreEqual(9D, (double)o["ùńîċõďë"]);
+            Assert.AreEqual(1, o.Count, "Expected the object to have one property after parsing an object with Unicode property names.");
+            Assert.AreEqual(9D, (double)o["ùńîċõďë"], "Expected the property 'ùńîċõďë' to have the value 9.");
         }
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse(@"{\u0061\u0062:1,\u0024\u005F:2,\u005F\u0024:3}");
             var o = (Json5Object)v;
-            Assert.AreEqual(3, o.Count);
-            Assert.AreEqual(1D, (double)o["ab"]);
-            Assert.AreEqual(2D, (double)o["$_"]);
-            Assert.AreEqual(3D, (double)o["_$"]);
+            Assert.AreEqual(3, o.Count, "Expected the object to have three properties after parsing an object with escaped property names.");
+            Assert.AreEqual(1D, (double)o["ab"], "Expected the property 'ab' to have the value 1.");
+            Assert.AreEqual(2D, (double)o["$_"], "Expected the property '$_' to have the value 2.");
+            Assert.AreEqual(3D, (double)o["_$"], "Expected the property '_$' to have the value 3.");
         }
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{abc:1,def:2}");
             var o = (Json5Object)v;
-            Assert.AreEqual(2, o.Count);
-            Assert.AreEqual(1D, (double)o["abc"]);
-            Assert.AreEqual(2D, (double)o["def"]);
+            Assert.AreEqual(2, o.Count, "Expected the object to have two properties after parsing an object with multiple properties.");
+            Assert.AreEqual(1D, (double)o["abc"], "Expected the property 'abc' to have the value 1.");
+            Assert.AreEqual(2D, (double)o["def"], "Expected the property 'def' to have the value 2.");
         }
 
         /// <summary>
@@ -116,8 +116,8 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("{a:{b:2}}");
             var o = (Json5Object)v;
-            Assert.AreEqual(1, o.Count);
-            Assert.AreEqual(2D, (double)o["a"]["b"]);
+            Assert.AreEqual(1, o.Count, "Expected the outer object to have one property after parsing a nested object.");
+            Assert.AreEqual(2D, (double)o["a"]["b"], "Expected the nested property 'b' to have the value 2.");
         }
     }
 }

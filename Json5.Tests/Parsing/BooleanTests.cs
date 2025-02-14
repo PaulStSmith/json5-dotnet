@@ -15,7 +15,7 @@ namespace Json5.Tests.Parsing
         public void TrueTest()
         {
             var v = Json5.Parse("true");
-            Assert.IsTrue((bool)v);
+            Assert.IsTrue((bool)v, "Expected the parsed value to be true.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Parsing
         public void FalseTest()
         {
             var v = Json5.Parse("false");
-            Assert.IsFalse((bool)v);
+            Assert.IsFalse((bool)v, "Expected the parsed value to be false.");
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("[]");
             var a = (Json5Array)v;
-            Assert.AreEqual(0, a.Count);
+            Assert.AreEqual(0, a.Count, "The array should be empty.");
         }
 
         /// <summary>
@@ -27,8 +27,8 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("[1]");
             var a = (Json5Array)v;
-            Assert.AreEqual(1, a.Count);
-            Assert.AreEqual(1D, (double)a[0]);
+            Assert.AreEqual(1, a.Count, "The array should contain one element.");
+            Assert.AreEqual(1D, (double)a[0], "The first element should be 1.");
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("[1,2]");
             var a = (Json5Array)v;
-            Assert.AreEqual(2, a.Count);
-            Assert.AreEqual(1D, (double)a[0]);
-            Assert.AreEqual(2D, (double)a[1]);
+            Assert.AreEqual(2, a.Count, "The array should contain two elements.");
+            Assert.AreEqual(1D, (double)a[0], "The first element should be 1.");
+            Assert.AreEqual(2D, (double)a[1], "The second element should be 2.");
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace Json5.Tests.Parsing
         {
             var v = Json5.Parse("[1,[2,3]]");
             var a = (Json5Array)v;
-            Assert.AreEqual(2, a.Count);
-            Assert.AreEqual(1D, (double)a[0]);
-            Assert.AreEqual(2D, (double)a[1][0]);
-            Assert.AreEqual(3D, (double)a[1][1]);
+            Assert.AreEqual(2, a.Count, "The array should contain two elements.");
+            Assert.AreEqual(1D, (double)a[0], "The first element should be 1.");
+            Assert.AreEqual(2D, (double)a[1][0], "The first element of the nested array should be 2.");
+            Assert.AreEqual(3D, (double)a[1][1], "The second element of the nested array should be 3.");
         }
     }
 }

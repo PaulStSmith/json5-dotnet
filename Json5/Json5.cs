@@ -21,11 +21,11 @@ namespace Json5
         /// <returns>A JSON5 value.</returns>  
         public static Json5Value Parse(string text, Func<Json5Container, string, Json5Value, Json5Value> reviver = null)
         {
-            Json5Parser parser = new Json5Parser(new StringReader(text));
-            Json5Value value = parser.Parse();
+            var parser = new Json5Parser(new StringReader(text));
+            var value = parser.Parse();
 
             if (reviver != null)
-                return Transform(value, reviver);
+                return TransformParsed(value, reviver);
 
             return value;
         }
@@ -38,7 +38,13 @@ namespace Json5
         /// <returns>A JSON5 value.</returns>  
         public static Json5Value Parse(string text, Func<string, Json5Value, Json5Value> reviver)
         {
-            throw new NotImplementedException();
+            var parser = new Json5Parser(new StringReader(text));
+            var value = parser.Parse();
+
+            if (reviver != null)
+                return TransformParsed(value, (t, k, v) => reviver(k, v));
+
+            return value;
         }
 
         /// <summary>  
@@ -51,7 +57,7 @@ namespace Json5
         public static string Stringify(Json5Value value, Func<Json5Container, string, Json5Value, Json5Value> replacer, string space = null)
         {
             if (replacer != null)
-                value = Transform(value, replacer);
+                value = TransformForStringify(value, replacer);
 
             return value.ToJson5String(space);
         }
@@ -77,7 +83,11 @@ namespace Json5
         /// <returns>A JSON5 string.</returns>  
         public static string Stringify(Json5Value value, Func<string, Json5Value, Json5Value> replacer, string space = null)
         {
-            throw new NotImplementedException();
+            Func<Json5Container, string, Json5Value, Json5Value> finalReplacer = null;
+            if (replacer != null)
+                finalReplacer = (t, k, v) => replacer(k, v);
+
+            return Stringify(value, finalReplacer, space);
         }
 
         /// <summary>  
@@ -89,7 +99,7 @@ namespace Json5
         /// <returns>A JSON5 string.</returns>  
         public static string Stringify(Json5Value value, Func<string, Json5Value, Json5Value> replacer, int space)
         {
-            throw new NotImplementedException();
+            return Stringify(value, replacer, new string(' ', Math.Min(space, 10)));
         }
 
         /// <summary>  
@@ -148,44 +158,68 @@ namespace Json5
         /// <param name="value">The JSON5 value to transform.</param>  
         /// <param name="transformer">The transformer function.</param>  
         /// <returns>The transformed JSON5 value.</returns>  
-        private static Json5Value Transform(Json5Value value, Func<Json5Container, string, Json5Value, Json5Value> transformer)
+        private static Json5Value TransformParsed(Json5Value value, Func<Json5Container, string, Json5Value, Json5Value> transformer)
         {
-            Json5Object holder = new Json5Object();
-            holder[""] = value;
-            return Walk(holder, "", transformer);
+            var holder = new Json5Object
+            {
+                [""] = value
+            };
+            return WalkWithRoot(holder, transformer); // This version allows root transformation
         }
 
         /// <summary>  
-        /// Walks through a JSON5 container and applies a transformer function to its values.  
+        /// Transforms a JSON5 value using a transformer function.  
         /// </summary>  
-        /// <param name="holder">The JSON5 container to walk through.</param>  
-        /// <param name="key">The key of the current value.</param>  
+        /// <param name="value">The JSON5 value to transform.</param>  
         /// <param name="transformer">The transformer function.</param>  
         /// <returns>The transformed JSON5 value.</returns>  
+        private static Json5Value TransformForStringify(Json5Value value, Func<Json5Container, string, Json5Value, Json5Value> transformer)
+        {
+            var holder = new Json5Object
+            {
+                [""] = value
+            };
+            return WalkNoRoot(holder, transformer); // This version skips root transformation
+        }
+
+        private static Json5Value WalkWithRoot(Json5Object holder, Func<Json5Container, string, Json5Value, Json5Value> transformer)
+        {
+            var value = holder[""];
+            TransformValue(transformer, value);
+            // For root transformation, we apply the transformer after walking the tree
+            return transformer(holder, "", value);
+        }
+
+        private static Json5Value WalkNoRoot(Json5Object holder, Func<Json5Container, string, Json5Value, Json5Value> transformer)
+        {
+            // For stringify, we don't transform the root value, just return it after walking
+            var value = holder[""];
+            TransformValue(transformer, value);
+            return value;
+        }
+
+        // The shared helper function for walking containers remains the same
         private static Json5Value Walk(Json5Container holder, string key, Func<Json5Container, string, Json5Value, Json5Value> transformer)
         {
-            Json5Value value = holder[key];
-            if (value is Json5Container)
+            var value = holder[key];
+            TransformValue(transformer, value);
+            return transformer(holder, key, value);
+        }
+
+        private static void TransformValue(Func<Json5Container, string, Json5Value, Json5Value> transformer, Json5Value value)
+        {
+            if (value is Json5Container c)
             {
-                Json5Container c = (Json5Container)value;
-                string[] keys = c.Keys.ToArray();
-                foreach (string k in keys)
+                var keys = c.Keys.ToArray();
+                foreach (var k in keys)
                 {
-                    Json5Value v = Walk(c, k, transformer);
-                    if (v != null)
+                    var v = Walk(c, k, transformer);
+                    if (v != null || value is Json5Array)
                         c[k] = v;
                     else
                         c.Remove(k);
                 }
             }
-
-            // Special case for holder  
-            if (key == "")
-            {
-                return value;
-            }
-
-            return transformer(holder, key, value);
         }
 
         /// <summary>  
@@ -195,9 +229,9 @@ namespace Json5
         /// <returns>The quoted string.</returns>  
         internal static string QuoteString(string s)
         {
-            int doubleQuotes = 0;
-            int singleQuotes = 0;
-            foreach (char c in s)
+            var doubleQuotes = 0;
+            var singleQuotes = 0;
+            foreach (var c in s)
             {
                 if (c == '"')
                     doubleQuotes++;
@@ -205,7 +239,7 @@ namespace Json5
                     singleQuotes++;
             }
 
-            char quote = doubleQuotes >= singleQuotes ? '\'' : '"';
+            var quote = doubleQuotes >= singleQuotes ? '\'' : '"';
             return quote + EscapeString(s, quote) + quote;
         }
 
@@ -217,8 +251,8 @@ namespace Json5
         /// <returns>The escaped string.</returns>  
         internal static string EscapeString(string s, char quote)
         {
-            string r = "";
-            foreach (char c in s)
+            var r = "";
+            foreach (var c in s)
                 r += EscapeChar(c, quote);
 
             return r;
@@ -237,27 +271,32 @@ namespace Json5
 
             switch (c)
             {
+                case '\0': return "\\0";
                 case '\b': return "\\b";
                 case '\t': return "\\t";
                 case '\n': return "\\n";
                 case '\f': return "\\f";
                 case '\r': return "\\r";
+                case '\v': return "\\v";
                 case '\\': return "\\\\";
                 case '\u2028': return "\\u2028";
                 case '\u2029': return "\\u2029";
             }
 
-            switch (char.GetUnicodeCategory(c))
+            if (c < ' ')
             {
-                case UnicodeCategory.Control:
-                case UnicodeCategory.Format:
-                case UnicodeCategory.Surrogate:
-                case UnicodeCategory.PrivateUse:
-                case UnicodeCategory.OtherNotAssigned:
-                    return "\\u" + ((int)c).ToString("x4");
+                return "\\x" + ((int)c).ToString("x2");
             }
 
-            return c.ToString();
+            return char.GetUnicodeCategory(c) switch
+            {
+                UnicodeCategory.Control or
+                UnicodeCategory.Format or
+                UnicodeCategory.Surrogate or
+                UnicodeCategory.PrivateUse or
+                UnicodeCategory.OtherNotAssigned => "\\u" + ((int)c).ToString("x4"),
+                _ => c.ToString(),
+            };
         }
     }
 }

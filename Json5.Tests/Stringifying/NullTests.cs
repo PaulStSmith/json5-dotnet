@@ -15,7 +15,7 @@ namespace Json5.Tests.Stringifying
         public void NullTest()
         {
             var s = Json5.Stringify(Json5Value.Null);
-            Assert.AreEqual("null", s);
+            Assert.AreEqual("null", s, "Expected the stringified value to be 'null' for the null value.");
         }
     }
 }

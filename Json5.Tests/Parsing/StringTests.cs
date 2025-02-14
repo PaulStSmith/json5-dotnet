@@ -15,7 +15,7 @@ namespace Json5.Tests.Parsing
         public void DoubleQuotedStringsTest()
         {
             var v = Json5.Parse("\"abc\"");
-            Assert.AreEqual("abc", (string)v);
+            Assert.AreEqual("abc", (string)v, "Expected the parsed value to be 'abc' for double-quoted strings.");
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Json5.Tests.Parsing
         public void SingleQuotedStringsTest()
         {
             var v = Json5.Parse("'abc'");
-            Assert.AreEqual("abc", (string)v);
+            Assert.AreEqual("abc", (string)v, "Expected the parsed value to be 'abc' for single-quoted strings.");
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Json5.Tests.Parsing
         public void NestedQuotesInStringsTest()
         {
             var v = Json5.Parse("['\"',\"'\"]");
-            Assert.AreEqual("\"", (string)v[0]);
-            Assert.AreEqual("'", (string)v[1]);
+            Assert.AreEqual("\"", (string)v[0], "Expected the first parsed value to be '\"' for nested quotes in strings.");
+            Assert.AreEqual("'", (string)v[1], "Expected the second parsed value to be ''' for nested quotes in strings.");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Json5.Tests.Parsing
         public void EscapedCharactersTest()
         {
             var v = Json5.Parse("'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\\n\\\r\n\\\r\\\u2028\\\u2029\\a\\'\\\"'");
-            Assert.AreEqual("\b\f\n\r\t\v\0\x0f\u01FFa'\"", (string)v);
+            Assert.AreEqual("\b\f\n\r\t\v\0\x0f\u01FFa'\"", (string)v, "Expected the parsed value to match the escaped characters.");
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Json5.Tests.Parsing
         public void SeparatorsTest()
         {
             var v = Json5.Parse("'\u2028\u2029'");
-            Assert.AreEqual("\u2028\u2029", (string)v);
+            Assert.AreEqual("\u2028\u2029", (string)v, "Expected the parsed value to match the separator characters.");
         }
     }
 }
