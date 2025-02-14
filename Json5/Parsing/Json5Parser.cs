@@ -18,7 +18,7 @@ namespace Json5.Parsing
         private bool parsed = false;
 
         /// <summary>
-        /// Constructs a new <see cref="Json5Parser"/> using a<see cref="TextReader"/>.
+        /// Constructs a new <see cref="Json5Parser"/> using a <see cref="TextReader"/>.
         /// </summary>
         /// <param name="reader">The reader that reads JSON5 text.</param>
         public Json5Parser(TextReader reader)
@@ -30,6 +30,7 @@ namespace Json5.Parsing
         /// Parses and returns a <see cref="Json5Value"/>.
         /// </summary>
         /// <returns>A <see cref="Json5Value"/>.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if the parser is used more than once.</exception>
         public Json5Value Parse()
         {
             if (this.parsed)
@@ -189,7 +190,6 @@ namespace Json5.Parsing
             }
 
             throw UnexpectedToken(token);
-            //throw new Exception("Invalid tree state.");
         }
 
         /// <summary>
@@ -199,9 +199,6 @@ namespace Json5.Parsing
         /// <remarks>This also sets the current container and changes the state of the parser if appropriate.</remarks>
         void Push(Json5Container container)
         {
-            //if(this.root == null)
-            //  this.root = container;
-
             this.stack.Push(container);
             this.currentContainer = container;
 
@@ -212,8 +209,7 @@ namespace Json5.Parsing
         }
 
         /// <summary>
-        /// Pops a container off the stack of open containers, sets the current container, and resets the state of the
-        /// parser.
+        /// Pops a container off the stack of open containers, sets the current container, and resets the state of the parser.
         /// </summary>
         /// <remarks>This also sets the current container and resets the state of the parser.</remarks>
         void Pop()
@@ -228,8 +224,7 @@ namespace Json5.Parsing
         /// </summary>
         /// <param name="value">The value to add to the current container.</param>
         /// <param name="key">The key to use if the current container is an object.</param>
-        /// <remarks>This also pushes <paramref name="value"/> onto the stack of open containers if
-        /// <paramref name="value"/> is a container; otherwise, it reset the state of the parser.</remarks>
+        /// <remarks>This also pushes <paramref name="value"/> onto the stack of open containers if <paramref name="value"/> is a container; otherwise, it resets the state of the parser.</remarks>
         void Add(Json5Value value, string key)
         {
             if (this.root == null)
@@ -260,10 +255,10 @@ namespace Json5.Parsing
         }
 
         /// <summary>
-        /// Returns a <see cref="SyntaxError"/> for an unexpected token.
+        /// Returns a <see cref="Json5ParsingException"/> for an unexpected token.
         /// </summary>
         /// <param name="token">The unexpected token.</param>
-        /// <returns>A <see cref="SyntaxError"/> for <paramref name="token"/>.</returns>
+        /// <returns>A <see cref="Json5ParsingException"/> for <paramref name="token"/>.</returns>
         Exception UnexpectedToken(Json5Token token)
         {
             if (token.Type == Json5TokenType.Eof)
@@ -277,12 +272,39 @@ namespace Json5.Parsing
         /// </summary>
         enum State
         {
+            /// <summary>
+            /// The state before an array element is parsed.
+            /// </summary>
             BeforeArrayElement,
+
+            /// <summary>
+            /// The state after an array element is parsed.
+            /// </summary>
             AfterArrayElement,
+
+            /// <summary>
+            /// The state before an object key is parsed.
+            /// </summary>
             BeforeObjectKey,
+
+            /// <summary>
+            /// The state after an object key is parsed.
+            /// </summary>
             AfterObjectKey,
+
+            /// <summary>
+            /// The state after an object value is parsed.
+            /// </summary>
             AfterObjectValue,
+
+            /// <summary>
+            /// The state when a value is being parsed.
+            /// </summary>
             Value,
+
+            /// <summary>
+            /// The state when parsing is complete.
+            /// </summary>
             End,
         }
     }

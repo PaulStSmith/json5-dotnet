@@ -2,16 +2,25 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Stringifying
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 replacer function.
+    /// </summary>
     [TestClass]
     public class ReplacerTests
     {
+        /// <summary>
+        /// Tests stringification with a list of keys to include.
+        /// </summary>
         [TestMethod]
         public void KeysTest()
         {
-            var s = Json5.Stringify(new Json5Object { { "a", 1 }, { "b", 2 }, { "3", 3 } }, new[] { "a", "3" });
+            var s = Json5.Stringify(new Json5Object { { "a", 1 }, { "b", 2 }, { "3", 3 } }, ["a", "3"]);
             Assert.AreEqual("{a:1,'3':3}", s);
         }
 
+        /// <summary>
+        /// Tests stringification with a replacer function.
+        /// </summary>
         [TestMethod]
         public void FunctionTest()
         {
@@ -19,6 +28,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{a:2,b:2}", s);
         }
 
+        /// <summary>
+        /// Tests exposing the parent value using a replacer function.
+        /// </summary>
         [TestMethod]
         public void ExposesParentValueTest()
         {

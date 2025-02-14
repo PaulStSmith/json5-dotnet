@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Stringifying
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 boolean stringification.
+    /// </summary>
     [TestClass]
     public class BooleanTests
     {
+        /// <summary>
+        /// Tests stringification of the boolean value true.
+        /// </summary>
         [TestMethod]
         public void TrueTest()
         {
@@ -12,6 +18,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("true", s);
         }
 
+        /// <summary>
+        /// Tests stringification of the boolean value false.
+        /// </summary>
         [TestMethod]
         public void FalseTest()
         {

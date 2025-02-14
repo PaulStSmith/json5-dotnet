@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 number parsing.
+    /// </summary>
     [TestClass]
     public class NumberTests
     {
+        /// <summary>
+        /// Tests parsing of numbers with leading zeroes.
+        /// </summary>
         [TestMethod]
         public void LeadingZeroesTest()
         {
@@ -14,6 +20,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(0D, (double)v[2]);
         }
 
+        /// <summary>
+        /// Tests parsing of integer numbers.
+        /// </summary>
         [TestMethod]
         public void IntegersTest()
         {
@@ -24,6 +33,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(7890D, (double)v[3]);
         }
 
+        /// <summary>
+        /// Tests parsing of signed numbers.
+        /// </summary>
         [TestMethod]
         public void SignedNumbersTest()
         {
@@ -34,6 +46,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(-0D, (double)v[3]);
         }
 
+        /// <summary>
+        /// Tests parsing of numbers with leading decimal points.
+        /// </summary>
         [TestMethod]
         public void LeadingDecimalPointsTest()
         {
@@ -42,6 +57,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(0.23D, (double)v[1]);
         }
 
+        /// <summary>
+        /// Tests parsing of fractional numbers.
+        /// </summary>
         [TestMethod]
         public void FractionalNumbersTest()
         {
@@ -50,6 +68,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(1.23D, (double)v[1]);
         }
 
+        /// <summary>
+        /// Tests parsing of numbers with exponents.
+        /// </summary>
         [TestMethod]
         public void ExponentsTest()
         {
@@ -63,6 +84,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(10D, (double)v[6]);
         }
 
+        /// <summary>
+        /// Tests parsing of hexadecimal numbers.
+        /// </summary>
         [TestMethod]
         public void HexadecimalNumbersTest()
         {
@@ -73,6 +97,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(255D, (double)v[3]);
         }
 
+        /// <summary>
+        /// Tests parsing of Infinity values.
+        /// </summary>
         [TestMethod]
         public void InfinityTest()
         {
@@ -81,6 +108,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(double.NegativeInfinity, (double)v[1]);
         }
 
+        /// <summary>
+        /// Tests parsing of NaN values.
+        /// </summary>
         [TestMethod]
         public void NaNTest()
         {

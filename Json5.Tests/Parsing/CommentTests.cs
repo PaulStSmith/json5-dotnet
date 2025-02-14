@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 comment parsing.
+    /// </summary>
     [TestClass]
     public class CommentTests
     {
+        /// <summary>
+        /// Tests parsing of single-line comments.
+        /// </summary>
         [TestMethod]
         public void SingleLineCommentsTest()
         {
@@ -13,6 +19,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(0, o.Count);
         }
 
+        /// <summary>
+        /// Tests parsing of single-line comments at the end of the file.
+        /// </summary>
         [TestMethod]
         public void SingleLineCommentsAtEofTest()
         {
@@ -21,6 +30,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(0, o.Count);
         }
 
+        /// <summary>
+        /// Tests parsing of multi-line comments.
+        /// </summary>
         [TestMethod]
         public void MultiLineComments()
         {

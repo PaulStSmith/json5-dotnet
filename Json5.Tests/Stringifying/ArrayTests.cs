@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Stringifying
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 array stringification.
+    /// </summary>
     [TestClass]
     public class ArrayTests
     {
+        /// <summary>
+        /// Tests stringification of empty arrays.
+        /// </summary>
         [TestMethod]
         public void EmptyArraysTest()
         {
@@ -12,6 +18,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of arrays with a single value.
+        /// </summary>
         [TestMethod]
         public void ArrayValuesTest()
         {
@@ -19,6 +28,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[1]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of arrays with multiple values.
+        /// </summary>
         [TestMethod]
         public void MultipleArrayValuesTest()
         {
@@ -26,6 +38,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[1,2]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of nested arrays.
+        /// </summary>
         [TestMethod]
         public void NestedArraysTest()
         {
@@ -33,6 +48,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[1,[2,3]]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of circular arrays.
+        /// </summary>
         [TestMethod]
         public void CircularArraysTest()
         {

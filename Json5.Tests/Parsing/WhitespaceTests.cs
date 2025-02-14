@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 whitespace parsing.
+    /// </summary>
     [TestClass]
     public class WhitespaceTests
     {
+        /// <summary>
+        /// Tests parsing of various whitespace characters.
+        /// </summary>
         [TestMethod]
         public void WhitespaceTest()
         {

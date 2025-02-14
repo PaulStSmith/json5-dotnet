@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Stringifying
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 object stringification.
+    /// </summary>
     [TestClass]
     public class ObjectTests
     {
+        /// <summary>
+        /// Tests stringification of empty objects.
+        /// </summary>
         [TestMethod]
         public void EmptyObjectsTest()
         {
@@ -12,6 +18,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with unquoted property names.
+        /// </summary>
         [TestMethod]
         public void UnquotedPropertyNamesTest()
         {
@@ -19,6 +28,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{a:1}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with single-quoted string property names.
+        /// </summary>
         [TestMethod]
         public void SingleQuotedStringPropertyNamesTest()
         {
@@ -26,6 +38,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{'a-b':1}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with double-quoted string property names.
+        /// </summary>
         [TestMethod]
         public void DoubleQuotedStringPropertyNamesTest()
         {
@@ -33,6 +48,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{\"a'\":1}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with empty string property names.
+        /// </summary>
         [TestMethod]
         public void EmptyStringPropertyNamesTest()
         {
@@ -40,6 +58,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{'':1}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with special character property names.
+        /// </summary>
         [TestMethod]
         public void SpecialCharacterPropertyNamesTest()
         {
@@ -47,6 +68,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{$_:1,_$:2,a\u200C:3}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with Unicode property names.
+        /// </summary>
         [TestMethod]
         public void UnicodePropertyNamesTest()
         {
@@ -54,6 +78,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{ùńîċõďë:9}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with escaped property names.
+        /// </summary>
         [TestMethod]
         public void EscapedPropertyNamesTest()
         {
@@ -61,6 +88,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual(@"{'\\\b\f\n\r\t\v\0\x01':1}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with multiple properties.
+        /// </summary>
         [TestMethod]
         public void MultiplePropertiesTest()
         {
@@ -68,6 +98,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{abc:1,def:2}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of nested objects.
+        /// </summary>
         [TestMethod]
         public void NestedObjectsTest()
         {
@@ -75,6 +108,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{a:{b:2}}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of circular objects.
+        /// </summary>
         [TestMethod]
         public void CircularObjectsTest()
         {

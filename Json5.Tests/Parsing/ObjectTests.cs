@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 object parsing.
+    /// </summary>
     [TestClass]
     public class ObjectTests
     {
+        /// <summary>
+        /// Tests parsing of empty objects.
+        /// </summary>
         [TestMethod]
         public void EmptyObjectsTest()
         {
@@ -13,6 +19,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(0, o.Count);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with double-quoted property names.
+        /// </summary>
         [TestMethod]
         public void DoubleStringPropertyNamesTest()
         {
@@ -22,6 +31,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(1D, (double)o["a"]);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with single-quoted property names.
+        /// </summary>
         [TestMethod]
         public void SingleStringPropertyNamesTest()
         {
@@ -31,6 +43,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(1D, (double)o["a"]);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with unquoted property names.
+        /// </summary>
         [TestMethod]
         public void UnquotedPropertyNamesTest()
         {
@@ -40,6 +55,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(1D, (double)o["a"]);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with special character property names.
+        /// </summary>
         [TestMethod]
         public void SpecialCharacterPropertyNamesTest()
         {
@@ -51,6 +69,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(3D, (double)o["a\u200C"]);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with Unicode property names.
+        /// </summary>
         [TestMethod]
         public void UnicodePropertyNamesTest()
         {
@@ -60,6 +81,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(9D, (double)o["ùńîċõďë"]);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with escaped property names.
+        /// </summary>
         [TestMethod]
         public void EscapedPropertyNamesTest()
         {
@@ -71,6 +95,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(3D, (double)o["_$"]);
         }
 
+        /// <summary>
+        /// Tests parsing of objects with multiple properties.
+        /// </summary>
         [TestMethod]
         public void MultiplePropertiesTest()
         {
@@ -81,6 +108,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(2D, (double)o["def"]);
         }
 
+        /// <summary>
+        /// Tests parsing of nested objects.
+        /// </summary>
         [TestMethod]
         public void NestedObjectsTest()
         {

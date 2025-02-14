@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 null value parsing.
+    /// </summary>
     [TestClass]
     public class NullTests
     {
+        /// <summary>
+        /// Tests parsing of the null value.
+        /// </summary>
         [TestMethod]
         public void NullTest()
         {

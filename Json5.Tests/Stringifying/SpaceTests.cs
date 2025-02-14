@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Stringifying
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 stringification with space formatting.
+    /// </summary>
     [TestClass]
     public class SpaceTests
     {
+        /// <summary>
+        /// Tests stringification with null space.
+        /// </summary>
         [TestMethod]
         public void NullSpaceTest()
         {
@@ -12,6 +18,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[1]", s);
         }
 
+        /// <summary>
+        /// Tests stringification with zero space.
+        /// </summary>
         [TestMethod]
         public void ZeroSpaceTest()
         {
@@ -19,6 +28,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[1]", s);
         }
 
+        /// <summary>
+        /// Tests stringification with empty string space.
+        /// </summary>
         [TestMethod]
         public void EmptyStringSpaceTest()
         {
@@ -26,6 +38,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[1]", s);
         }
 
+        /// <summary>
+        /// Tests stringification with numeric space.
+        /// </summary>
         [TestMethod]
         public void NumberSpaceTest()
         {
@@ -33,6 +48,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[\n  1,\n]", s);
         }
 
+        /// <summary>
+        /// Tests stringification with maximum numeric space.
+        /// </summary>
         [TestMethod]
         public void MaxNumberSpaceTest()
         {
@@ -40,6 +58,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[\n          1,\n]", s);
         }
 
+        /// <summary>
+        /// Tests stringification with string space.
+        /// </summary>
         [TestMethod]
         public void StringSpaceTest()
         {
@@ -47,6 +68,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[\n\t1,\n]", s);
         }
 
+        /// <summary>
+        /// Tests stringification with maximum string space.
+        /// </summary>
         [TestMethod]
         public void MaxStringSpaceTest()
         {
@@ -54,6 +78,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[\n          1,\n]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of arrays with space formatting.
+        /// </summary>
         [TestMethod]
         public void ArraysTest()
         {
@@ -61,6 +88,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[\n  1,\n]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of nested arrays with space formatting.
+        /// </summary>
         [TestMethod]
         public void NestedArraysTest()
         {
@@ -68,6 +98,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("[\n  1,\n  [\n    2,\n  ],\n  3,\n]", s);
         }
 
+        /// <summary>
+        /// Tests stringification of objects with space formatting.
+        /// </summary>
         [TestMethod]
         public void ObjectsTest()
         {
@@ -75,6 +108,9 @@ namespace Json5.Tests.Stringifying
             Assert.AreEqual("{\n  a: 1,\n}", s);
         }
 
+        /// <summary>
+        /// Tests stringification of nested objects with space formatting.
+        /// </summary>
         [TestMethod]
         public void NestedObjectsTest()
         {

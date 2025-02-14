@@ -3,9 +3,15 @@ using System;
 
 namespace Json5.Tests.Stringifying
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 date stringification.
+    /// </summary>
     [TestClass]
     public class DateTests
     {
+        /// <summary>
+        /// Tests stringification of date values.
+        /// </summary>
         [TestMethod]
         public void DatesTest()
         {

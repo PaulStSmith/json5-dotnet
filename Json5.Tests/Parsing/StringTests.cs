@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 string parsing.
+    /// </summary>
     [TestClass]
     public class StringTests
     {
+        /// <summary>
+        /// Tests parsing of double-quoted strings.
+        /// </summary>
         [TestMethod]
         public void DoubleQuotedStringsTest()
         {
@@ -12,6 +18,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("abc", (string)v);
         }
 
+        /// <summary>
+        /// Tests parsing of single-quoted strings.
+        /// </summary>
         [TestMethod]
         public void SingleQuotedStringsTest()
         {
@@ -19,6 +28,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("abc", (string)v);
         }
 
+        /// <summary>
+        /// Tests parsing of strings with nested quotes.
+        /// </summary>
         [TestMethod]
         public void NestedQuotesInStringsTest()
         {
@@ -27,6 +39,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("'", (string)v[1]);
         }
 
+        /// <summary>
+        /// Tests parsing of strings with escaped characters.
+        /// </summary>
         [TestMethod]
         public void EscapedCharactersTest()
         {
@@ -34,6 +49,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("\b\f\n\r\t\v\0\x0f\u01FFa'\"", (string)v);
         }
 
+        /// <summary>
+        /// Tests parsing of strings with separator characters.
+        /// </summary>
         [TestMethod]
         public void SeparatorsTest()
         {

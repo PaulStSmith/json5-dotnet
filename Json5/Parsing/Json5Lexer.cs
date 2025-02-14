@@ -11,16 +11,15 @@ namespace Json5.Parsing
     class Json5Lexer
     {
         private Json5TextReader reader;
-        //private State state;
 
         /// <summary>
-        /// Contructs a new <see cref="Json5Lexer"/> using a <see cref="string"/>.
+        /// Constructs a new <see cref="Json5Lexer"/> using a <see cref="string"/>.
         /// </summary>
         /// <param name="source">The JSON5 text.</param>
         public Json5Lexer(string source) : this(new StringReader(source)) { }
 
         /// <summary>
-        /// Contructs a new <see cref="Json5Lexer"/> using a <see cref="TextReader"/>.
+        /// Constructs a new <see cref="Json5Lexer"/> using a <see cref="TextReader"/>.
         /// </summary>
         /// <param name="reader">The reader that reads JSON5 text.</param>
         public Json5Lexer(TextReader reader)
@@ -757,12 +756,11 @@ namespace Json5.Parsing
                 case '9':
                     return true;
             }
-
             return false;
         }
 
         /// <summary>
-        /// Determins whether a character is a hexadecimal digit.
+        /// Determines whether a character is a hexadecimal digit.
         /// </summary>
         /// <param name="c">The character to test.</param>
         /// <returns><c>true</c> if <paramref name="c"/> is a hexadecimal digit; otherwise, <c>false</c>.</returns>
@@ -784,7 +782,6 @@ namespace Json5.Parsing
                 case 'F':
                     return true;
             }
-
             return IsDigit(c);
         }
 
@@ -817,6 +814,15 @@ namespace Json5.Parsing
             return IsLetter(c);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Json5Token"/>.
+        /// </summary>
+        /// <param name="type">The type of the token.</param>
+        /// <param name="value">The value of the token.</param>
+        /// <param name="input">The input string that generated the token.</param>
+        /// <param name="line">The line number where the token was found.</param>
+        /// <param name="column">The column number where the token was found.</param>
+        /// <returns>A new <see cref="Json5Token"/>.</returns>
         Json5Token Token(Json5TokenType type, object value = null, string input = null, int? line = null, int? column = null)
         {
             if (value != null)
@@ -829,27 +835,41 @@ namespace Json5.Parsing
         }
 
         /// <summary>
-        /// Returns a <see cref="SyntaxError"/> for an unexpected character.
+        /// Returns a <see cref="Json5UnexpectedInputException"/> for an unexpected character.
         /// </summary>
         /// <param name="c">The unexpected character.</param>
-        /// <returns>A <see cref="SyntaxError"/> for <paramref name="c"/>.</returns>
+        /// <returns>A <see cref="Json5UnexpectedInputException"/> for <paramref name="c"/>.</returns>
         Json5UnexpectedInputException UnexpectedCharacter(char c)
         {
             this.reader.Read();
             return new Json5UnexpectedInputException(c.ToString(), this.reader.Line, this.reader.Column);
         }
 
+        /// <summary>
+        /// Returns a <see cref="Json5UnexpectedEndOfInputException"/> for an unexpected end of input.
+        /// </summary>
+        /// <returns>A <see cref="Json5UnexpectedEndOfInputException"/>.</returns>
         Json5UnexpectedEndOfInputException UnexpectedEndOfInput()
         {
             return new Json5UnexpectedEndOfInputException(this.reader.Line, this.reader.Column);
         }
 
+        /// <summary>
+        /// Returns a <see cref="Json5ParsingException"/> for a general error.
+        /// </summary>
+        /// <param name="innerException">The inner exception that caused the error.</param>
+        /// <returns>A <see cref="Json5ParsingException"/>.</returns>
         Json5ParsingException Error(Exception innerException)
         {
             this.reader.Read();
             return new Json5ParsingException(innerException, this.reader.Line, this.reader.Column);
         }
 
+        /// <summary>
+        /// Returns a <see cref="Json5ParsingException"/> for an invalid Unicode escape sequence.
+        /// </summary>
+        /// <param name="u">The invalid Unicode character.</param>
+        /// <returns>A <see cref="Json5ParsingException"/>.</returns>
         Json5ParsingException InvalidUnicodeEscape(char u)
         {
             this.reader.Read();
@@ -861,26 +881,109 @@ namespace Json5.Parsing
         /// </summary>
         enum State
         {
+            /// <summary>
+            /// The default state.
+            /// </summary>
             Default,
+
+            /// <summary>
+            /// The state when a comment is detected.
+            /// </summary>
             Comment,
+
+            /// <summary>
+            /// The state when a multi-line comment is detected.
+            /// </summary>
             MultiLineComment,
+
+            /// <summary>
+            /// The state when an asterisk is detected in a multi-line comment.
+            /// </summary>
             MultiLineCommentAsterisk,
+
+            /// <summary>
+            /// The state when a single-line comment is detected.
+            /// </summary>
             SingleLineComment,
+
+            /// <summary>
+            /// The state when an identifier is detected.
+            /// </summary>
             Identifier,
+
+            /// <summary>
+            /// The state when an escape slash is detected at the start of an identifier.
+            /// </summary>
             IdentifierStartEscapeSlash,
+
+            /// <summary>
+            /// The state when an escape slash is detected in an identifier.
+            /// </summary>
             IdentifierEscapeSlash,
+
+            /// <summary>
+            /// The state when a sign is detected.
+            /// </summary>
             Sign,
+
+            /// <summary>
+            /// The state when a zero is detected.
+            /// </summary>
             Zero,
+
+            /// <summary>
+            /// The state when a decimal integer is detected.
+            /// </summary>
             DecimalInteger,
+
+            /// <summary>
+            /// The state when a leading decimal point is detected.
+            /// </summary>
             DecimalPointLeading,
+
+            /// <summary>
+            /// The state when a decimal point is detected.
+            /// </summary>
             DecimalPoint,
+
+            /// <summary>
+            /// The state when a decimal fraction is detected.
+            /// </summary>
             DecimalFraction,
+
+            /// <summary>
+            /// The state when a decimal exponent is detected.
+            /// </summary>
             DecimalExponent,
+
+            /// <summary>
+            /// The state when a sign is detected in a decimal exponent.
+            /// </summary>
             DecimalExponentSign,
+
+            /// <summary>
+            /// The state when an integer is detected in a decimal exponent.
+            /// </summary>
             DecimalExponentInteger,
+
+            /// <summary>
+            /// The state when a hexadecimal number is detected.
+            /// </summary>
             Hexadecimal,
+
+            /// <summary>
+            /// The state when a hexadecimal integer is detected.
+            /// </summary>
             HexadecimalInteger,
+
+            /// <summary>
+            /// The state when a string is detected.
+            /// </summary>
             String,
+
+            /// <summary>
+            /// The state when an escape character is detected in a string.
+            /// </summary>
             Escape,
         }
     }

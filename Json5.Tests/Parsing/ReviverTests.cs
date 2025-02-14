@@ -2,9 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Json5.Tests.Parsing
 {
+    /// <summary>
+    /// Contains unit tests for JSON5 reviver function.
+    /// </summary>
     [TestClass]
     public class ReviverTests
     {
+        /// <summary>
+        /// Tests modifying property values using a reviver function.
+        /// </summary>
         [TestMethod]
         public void ModifiesPropertyValuesTest()
         {
@@ -13,6 +19,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(2D, (double)val["b"]);
         }
 
+        /// <summary>
+        /// Tests modifying nested object property values using a reviver function.
+        /// </summary>
         [TestMethod]
         public void ModifiesNestedObjectPropertyValuesTest()
         {
@@ -20,6 +29,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("revived", (string)val["a"]["b"]);
         }
 
+        /// <summary>
+        /// Tests deleting property values using a reviver function.
+        /// </summary>
         [TestMethod]
         public void DeletesPropertyValuesTest()
         {
@@ -29,6 +41,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(2D, (double)o["b"]);
         }
 
+        /// <summary>
+        /// Tests modifying array values using a reviver function.
+        /// </summary>
         [TestMethod]
         public void ModifiesArrayValuesTest()
         {
@@ -38,6 +53,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual(2D, (double)val[2]);
         }
 
+        /// <summary>
+        /// Tests modifying nested array values using a reviver function.
+        /// </summary>
         [TestMethod]
         public void ModifiesNestedArrayValuesTest()
         {
@@ -48,15 +66,21 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("revived", (string)val[1][2]);
         }
 
+        /// <summary>
+        /// Tests deleting array values using a reviver function.
+        /// </summary>
         [TestMethod]
         public void DeletesArrayValuesTest()
         {
             var val = Json5.Parse("[0,1,2]", (k, v) => (k == "1") ? null : v);
             Assert.AreEqual(0D, (double)val[0]);
-            Assert.AreEqual(null, val[1]);
+            Assert.IsNull(val[1]);
             Assert.AreEqual(2D, (double)val[2]);
         }
 
+        /// <summary>
+        /// Tests modifying the root value using a reviver function.
+        /// </summary>
         [TestMethod]
         public void ModifiesRootValueTest()
         {
@@ -64,6 +88,9 @@ namespace Json5.Tests.Parsing
             Assert.AreEqual("revived", (string)val);
         }
 
+        /// <summary>
+        /// Tests exposing the parent value using a reviver function.
+        /// </summary>
         [TestMethod]
         public void ExposesParentValueTest()
         {
